@@ -4,11 +4,12 @@ package com.silmood.tictactoe;
 import java.util.ArrayList;
 
 public class TicTacToe {
-    private static final int LIMIT = 2;
-    private static final char UP = 'U';
-    private static final char DOWN = 'D';
-    private static final char RIGHT = 'R';
-    private static final char LEFT = 'L';
+    public static final int LIMIT = 2;
+    public static final char UP = 'U';
+    public static final char DOWN = 'D';
+    public static final char RIGHT = 'R';
+    public static final char LEFT = 'L';
+
 
     public ArrayList<int[]> getHorizontalAdjacent(int[] position) {
         ArrayList<int[]> adjacent = new ArrayList<>();
@@ -42,6 +43,22 @@ public class TicTacToe {
             } else {
                 adjacent.add(new int[]{row, i});
             }
+        }
+
+        return adjacent;
+    }
+
+    public ArrayList<int[]> getDiagonalAdjacent(int[] position, char horizontal, char vertical) {
+        int row = position[0];
+        int col = position[1];
+        ArrayList<int[]> adjacent = new ArrayList<>();
+
+
+        for (int i = (commitOperation(row, vertical)),
+                j = (commitOperation(col, horizontal));
+             commitEvaluation(i, vertical) && commitEvaluation(j, horizontal);
+             i = commitOperation(i, vertical) , j = commitOperation(j, horizontal)) {
+                adjacent.add(new int[]{i, j});
         }
 
         return adjacent;
