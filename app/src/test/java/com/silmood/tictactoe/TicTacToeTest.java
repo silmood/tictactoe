@@ -3,7 +3,6 @@ package com.silmood.tictactoe;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,5 +53,41 @@ public class TicTacToeTest {
 
         Assert.assertEquals("[0, 2]", textResult.toString());
         Assert.assertEquals(1, result.size());
+    }
+
+    @Test
+    public void x_horizontal_wins() {
+        TicTacToe game = new TicTacToe();
+        game.startGame();
+
+        Assert.assertFalse(game.turn(new int[]{0,0}));
+        Assert.assertFalse(game.turn(new int[]{2,0}));
+        Assert.assertFalse(game.turn(new int[]{0,1}));
+        Assert.assertFalse(game.turn(new int[]{2,1}));
+        Assert.assertTrue(game.turn(new int[]{0,2}));
+    }
+
+    @Test
+    public void x_vertical_wins() {
+        TicTacToe game = new TicTacToe();
+        game.startGame();
+
+        Assert.assertFalse(game.turn(new int[]{0,0}));
+        Assert.assertFalse(game.turn(new int[]{0,1}));
+        Assert.assertFalse(game.turn(new int[]{1,0}));
+        Assert.assertFalse(game.turn(new int[]{1,1}));
+        Assert.assertTrue(game.turn(new int[]{2,0}));
+    }
+
+    @Test
+    public void x_diagonal_wins() {
+        TicTacToe game = new TicTacToe();
+        game.startGame();
+
+        Assert.assertFalse(game.turn(new int[]{0,0}));
+        Assert.assertFalse(game.turn(new int[]{2,0}));
+        Assert.assertFalse(game.turn(new int[]{1,1}));
+        Assert.assertFalse(game.turn(new int[]{0,2}));
+        Assert.assertTrue(game.turn(new int[]{2,2}));
     }
 }

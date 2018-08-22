@@ -1,6 +1,5 @@
 package com.silmood.tictactoe;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,20 +7,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity{
 
-    public static final int ROWS = 5;
-    public static final int COLS = 5;
+    public static final int ROWS = 3;
+    public static final int COLS = 3;
 
     private LinearLayout container;
+    private TicTacToe game;
+    private ArrayList<Button> boxes;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        boxes = new ArrayList<>();
         container = findViewById(R.id.container);
+        game = new TicTacToe();
+        game.startGame();
 
         setupMatrix();
     }
@@ -32,6 +39,7 @@ public class MainActivity extends AppCompatActivity{
 
             for (int j = 0; j < COLS; j++) {
                 Button box = buildButton(new int[]{i, j});
+                boxes.add(box);
                 row.addView(box);
             }
 
@@ -55,7 +63,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private Button buildButton(int[] position) {
-        Button box = new Button(this);
+        final Button box = new Button(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f/COLS);
         params.setMargins(10, 10, 10, 10);
 
@@ -65,7 +73,11 @@ public class MainActivity extends AppCompatActivity{
         box.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                view.getTag();
+                char player = game.getCurrentPlayer();
+                box.setText("" + player);
+                box.setClickable(false);
+
+                movement((int[]) view.getTag());
 
             }
         });
@@ -73,7 +85,23 @@ public class MainActivity extends AppCompatActivity{
         return box;
     }
 
-    private void evaluatePosition(int[] position) {
+    private void movement(int[] position) {
+        char player = game.getCurrentPlayer();
+        boolean hasWin = game.turn(position);
 
+        if (hasWin) {
+            Toast.makeText(this, "PLAYER " + player + " has win", Toast.LENGTH_LONG).show();
+            resetGame();
+        }
     }
+
+    private void resetGame() {
+        game.startGame();
+
+        for (Button box: boxes) {
+            box.setClickable(true);
+            box.setText("");
+        }
+    }
+
 }

@@ -2,13 +2,87 @@ package com.silmood.tictactoe;
 
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class TicTacToe {
-    public static final int LIMIT = 2;
+    private static final int LIMIT = 2;
     public static final char UP = 'U';
     public static final char DOWN = 'D';
     public static final char RIGHT = 'R';
     public static final char LEFT = 'L';
+
+    private char[][] board = {
+            {' ', ' ', ' '},
+            {' ', ' ', ' '},
+            {' ', ' ', ' '}
+    };
+
+    private char currentPlayer;
+
+    public char getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void startGame() {
+        resetBoard();
+        int player = new Random().nextInt(1);
+        this.currentPlayer = player == 0 ? 'X' : 'O';
+    }
+
+    private void resetBoard() {
+        this.board = new char[][]{
+                {' ', ' ', ' '},
+                {' ', ' ', ' '},
+                {' ', ' ', ' '}
+        };
+    }
+
+    public boolean turn(int[] position) {
+        setBox(position, this.currentPlayer);
+        boolean result = hasWin(position, this.currentPlayer);
+        this.currentPlayer = currentPlayer == 'X' ? 'O' : 'X';
+        return result;
+    }
+
+    private void setBox(int[] position, char player) {
+        int row = position[0];
+        int col = position[1];
+
+        this.board[row][col] = player;
+    }
+
+    public boolean hasWin(int[] position, char player) {
+        ArrayList<int[]> horizontal = getHorizontalAdjacent(position);
+        ArrayList<int[]> vertical = getVerticalAdjacent(position);
+
+        ArrayList<int[]> firstDiagonal = getDiagonalAdjacent(position, LEFT, UP);
+        firstDiagonal.addAll(getDiagonalAdjacent(position, RIGHT, DOWN));
+
+        ArrayList<int[]> secondDiagonal = getDiagonalAdjacent(position, RIGHT, UP);
+        secondDiagonal.addAll(getDiagonalAdjacent(position, LEFT, DOWN));
+
+        return validateLine(horizontal, player)
+                || validateLine(vertical, player)
+                || validateLine(firstDiagonal, player)
+                || validateLine(secondDiagonal, player);
+
+    }
+
+    public boolean validateLine(ArrayList<int[]> toValidate, char player){
+        if (toValidate.size() == 2) {
+            boolean result = true;
+            for (int[] position :
+                    toValidate) {
+                int row = position[0];
+                int col = position[1];
+
+                result = result && (board[row][col] == player);
+            }
+            return  result;
+        } else {
+            return false;
+        }
+    }
 
 
     public ArrayList<int[]> getHorizontalAdjacent(int[] position) {
